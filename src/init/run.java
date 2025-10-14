@@ -41,10 +41,7 @@ public class run {
 		}
 		
 		mainBoard.printBoard();
-		new GameUI();
-		
-		
-		
+		GameUI gameUI = new GameUI();		
 
 	}
 
