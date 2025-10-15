@@ -21,6 +21,9 @@ import model.SudokuBoard;
 public class GameUI extends JPanel
 {
 	private JFrame gameFrame;
+	private JPanel topPanel;
+	private JPanel finishedButtonPanel;
+	private JLabel finishedButtonLabel;
 	private JPanel gameBoardContainer;
 	private JPanel gameBoardPanel;
 	private JPanel numberDeckContainer;
@@ -39,6 +42,10 @@ public class GameUI extends JPanel
 	private static final Color CUSTOM_CELL_FG = new Color(20,127,126);
 	private static final Color HOVERED_CELL_COLOR = Color.LIGHT_GRAY;
 	private static final Color NUMBER_DECK_COLOR = Color.DARK_GRAY;
+	
+	private static final Color FINISHED_BUTTON_COLOR = new Color(177, 249, 164);
+	private static final Color FINISHED_BUTTON_HOVER = new Color(201, 251, 192);
+
 	
 	private int[][] sudokuBoard;
 
@@ -65,6 +72,31 @@ public class GameUI extends JPanel
 		gameFrame.setLocationRelativeTo(null);
 		gameFrame.setResizable(true); 
 		gameFrame.setLayout(new BorderLayout());
+		
+		topPanel = new JPanel(new GridBagLayout());
+		topPanel.setBackground(BG);
+		topPanel.setPreferredSize(new Dimension(WINDOW_SIZE_X, 60));
+		
+		finishedButtonLabel = new JLabel("Done", SwingConstants.CENTER);
+		finishedButtonLabel.setFont(new Font("Broadway", Font.BOLD, 45));
+		
+		finishedButtonPanel = new JPanel();
+		finishedButtonPanel.setBackground(FINISHED_BUTTON_COLOR);
+		finishedButtonPanel.setForeground(Color.WHITE);
+		finishedButtonPanel.setVisible(true);
+		
+		finishedButtonPanel.addMouseListener(new MouseAdapter() {
+			public void mouseEntered(MouseEvent arg0) {
+				finishedButtonPanel.setBackground(FINISHED_BUTTON_HOVER);
+			}
+			public void mouseExited(MouseEvent arg0) {
+				finishedButtonPanel.setBackground(FINISHED_BUTTON_COLOR);
+			}
+		});
+		
+		finishedButtonPanel.add(finishedButtonLabel);
+		topPanel.add(finishedButtonPanel);
+		
 		
 		gameBoardContainer = new JPanel(new GridBagLayout());
 		gameBoardContainer.setBackground(BG);
@@ -197,6 +229,7 @@ public class GameUI extends JPanel
 
 		gameFrame.add(gameBoardContainer, BorderLayout.CENTER);
 		gameFrame.add(numberDeckContainer, BorderLayout.SOUTH);
+		gameFrame.add(topPanel, BorderLayout.NORTH);
 		gameFrame.setVisible(true);
 	}
 	

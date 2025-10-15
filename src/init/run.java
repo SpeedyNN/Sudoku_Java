@@ -41,7 +41,7 @@ public class run {
 		}
 		
 		
-		GameUI gameUI = new GameUI();		
+		GameUI gameUI = new GameUI(mainBoard);		
 
 	}
 
