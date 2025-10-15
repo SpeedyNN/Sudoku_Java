@@ -11,7 +11,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.*;
@@ -31,7 +30,7 @@ public class GameUI extends JPanel
 	private JLabel cursorItem;
 	
 	private static final int WINDOW_SIZE_X = 800;
-	private static final int WINDOW_SIZE_Y = 800;
+	private static final int WINDOW_SIZE_Y = 900;
 	
 	private static final int CELL_COUNT = 9;
 	private static final int CELL_SIZE = 70;
@@ -45,6 +44,7 @@ public class GameUI extends JPanel
 	
 	private static final Color FINISHED_BUTTON_COLOR = new Color(177, 249, 164);
 	private static final Color FINISHED_BUTTON_HOVER = new Color(201, 251, 192);
+	private static final Color FINISHED_BUTTON_PRESSED = new Color(159, 200, 152);
 
 	
 	private int[][] sudokuBoard;
@@ -91,6 +91,19 @@ public class GameUI extends JPanel
 			}
 			public void mouseExited(MouseEvent arg0) {
 				finishedButtonPanel.setBackground(FINISHED_BUTTON_COLOR);
+			}
+			public void mousePressed(MouseEvent arg0) {
+				
+				finishedButtonPanel.setBackground(FINISHED_BUTTON_PRESSED);
+
+				//Calculate answer
+			}
+
+			public void mouseReleased(MouseEvent arg0) {
+				
+				finishedButtonPanel.setBackground(FINISHED_BUTTON_COLOR);
+
+				//Calculate answer
 			}
 		});
 		
