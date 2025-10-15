@@ -238,8 +238,6 @@ public class GameUI extends JPanel
 			return;
 		}
 		
-		
-		//below we see the jankiest way ever of checking if a cell is permanent or not lmfao don't judge me
 		Component[] components = targetCell.getComponents();
 	    for (Component comp : components) {
 	        if (comp instanceof JLabel) {
@@ -265,6 +263,7 @@ public class GameUI extends JPanel
 		targetCell.repaint();
 		currentCursorItem = null;
 		cursorItem.setVisible(false);
+		
 	}
 	
 	private void eraseCell(JPanel cell) {
@@ -303,5 +302,35 @@ public class GameUI extends JPanel
 			}
 		}
 		
+	}
+	
+	public int[][] getCellGridAs2DArray(){
+	    
+	    int[][] result = new int[CELL_COUNT][CELL_COUNT];
+	    
+	    for(int i = 0; i < CELL_COUNT; i++) {
+	        for(int j = 0; j < CELL_COUNT; j++) {
+	            JPanel cell = cellGrid[i][j];
+	            int cellValue = 0;
+	            
+	            Component[] components = cell.getComponents();
+	            for (Component comp : components) {
+	                if (comp instanceof JLabel) {
+	                    JLabel label = (JLabel) comp;
+	                    String text = label.getText();
+	                    try {
+	                        cellValue = Integer.parseInt(text);
+	                    } catch (NumberFormatException e) {
+	                        cellValue = 0;
+	                    }
+	                    break; 
+	                }
+	            }
+	            
+	            result[i][j] = cellValue;
+	        }
+	    }
+	    
+	    return result;
 	}
 }
