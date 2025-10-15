@@ -40,9 +40,8 @@ public class run {
 			break;
 		}
 		
-		mainBoard.printBoard();
-		GameUI gameUI = new GameUI(mainBoard);		
 		
+		GameUI gameUI = new GameUI();		
 
 	}
 

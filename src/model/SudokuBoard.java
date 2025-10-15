@@ -14,13 +14,20 @@ public class SudokuBoard {
 	private static final int SUBGRID = 3;
 	private final int difficulty;
 	private static final Random rand = new Random();
+	private int[][] solution;
 	
 	public SudokuBoard(int difficulty){
 		this.difficulty = difficulty;
 		grid = new int[SIZE][SIZE];
 		generateFullBoard(grid);
+		solution = copyBoard(grid);
 		removeNumbers(grid,difficulty);
+		System.out.println("\nPuzzle");
 		printBoard(grid);
+		System.out.println("\nsolution");
+		//printBoard(solution);
+		System.out.println(Arrays.deepToString(solution));
+		
 	}
 
 	public int[][] getGrid() {
@@ -39,7 +46,7 @@ public class SudokuBoard {
 			System.out.println();
 		}
 		
-	}
+	}	
 	
 	public static boolean generateFullBoard(int[][] grid) {
 		for (int row = 0; row < SIZE; row++) {
@@ -142,7 +149,7 @@ public class SudokuBoard {
 	        }
 	        return copy;
 	    }
-	  private static void printBoard(int[][] board) {
+	  public static void printBoard(int[][] board) {
 	        for (int[] row : board) {
 	            for (int num : row) {
 	                System.out.print((num == 0 ? "." : num) + " ");
