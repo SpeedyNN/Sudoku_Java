@@ -1,6 +1,7 @@
 package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagLayout;
@@ -10,9 +11,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.*;
+
+import model.SudokuBoard;
 
 public class GameUI extends JPanel
 {
@@ -31,16 +35,25 @@ public class GameUI extends JPanel
 	
 	private static final Color BG = Color.GRAY;
 	private static final Color CELL_COLOR = Color.WHITE;
+	private static final Color PERM_CELL_FG = Color.BLACK;
+	private static final Color CUSTOM_CELL_FG = new Color(20,127,126);
 	private static final Color HOVERED_CELL_COLOR = Color.LIGHT_GRAY;
 	private static final Color NUMBER_DECK_COLOR = Color.DARK_GRAY;
+	
+	private int[][] sudokuBoard;
 
 	private JLabel currentCursorItem = null; 
 	private JPanel currentHoveredCell = null;
+	
+	private JPanel[][] cellGrid = new JPanel[CELL_COUNT][CELL_COUNT];	
+	
 	private List<JLabel> numberLabels = new ArrayList<>();
 
 	
-	public GameUI(){
+	public GameUI(SudokuBoard sudokuBoard){
 		initializeUI();
+		System.out.println(cellGrid);
+		this.sudokuBoard = sudokuBoard.getGrid();
 		displayGame();
 	}
 	
@@ -77,6 +90,8 @@ public class GameUI extends JPanel
         	int right = (j == 8) ? 5 : 1;
 			
 			cell.setBorder(BorderFactory.createMatteBorder(top, left, bottom, right, Color.BLACK));
+			cellGrid[i][j] = cell;
+			//System.out.println("adding cell: " + cell + " to grid position: "+ i + " " + j);
 			gameBoardPanel.add(cell);
 
 			cell.addMouseListener(new MouseAdapter() {
@@ -88,6 +103,11 @@ public class GameUI extends JPanel
 					currentHoveredCell = null;
 					cell.setBackground(CELL_COLOR);
 				}
+				public void mousePressed(MouseEvent e) {
+			        if (SwingUtilities.isRightMouseButton(e)) {
+			            eraseCell(cell);
+			        }
+			    }
 			});
 			}
 		}
@@ -95,6 +115,7 @@ public class GameUI extends JPanel
 		cursorItem = new JLabel("", SwingConstants.CENTER);
 		cursorItem.setSize(CELL_SIZE, CELL_SIZE);
 		cursorItem.setBackground(CELL_COLOR);
+		cursorItem.setForeground(CUSTOM_CELL_FG);
 		cursorItem.setOpaque(true);
 		cursorItem.setFont(new Font("Broadway", Font.BOLD, 45));
 		cursorItem.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
@@ -125,7 +146,7 @@ public class GameUI extends JPanel
 			JLabel numberLabel = new JLabel(String.valueOf(i), SwingConstants.CENTER);
 			numberLabel.setFont(new Font("Broadway", Font.BOLD, 45));
 			numberLabel.setBackground(CELL_COLOR);
-			numberLabel.setForeground(Color.BLACK);
+			numberLabel.setForeground(CUSTOM_CELL_FG);
 			numberLabel.setOpaque(true);
 			numberLabel.setPreferredSize(new Dimension(CELL_SIZE, CELL_SIZE));
 			numberLabel.setMinimumSize(new Dimension(CELL_SIZE, CELL_SIZE));
@@ -217,20 +238,99 @@ public class GameUI extends JPanel
 			return;
 		}
 		
+		Component[] components = targetCell.getComponents();
+	    for (Component comp : components) {
+	        if (comp instanceof JLabel) {
+	            JLabel existingLabel = (JLabel) comp;
+	            if (existingLabel.getForeground().equals(PERM_CELL_FG)) {
+	                System.err.println("Cannot overwrite permanent cell");
+	                currentCursorItem = null;
+	                cursorItem.setVisible(false);
+	                return;
+	            }
+	        }
+	    }
+		
 		System.out.println("dropping number: " + currentCursorItem.getText() + " into cell");
 		targetCell.removeAll();
 		
 		JLabel numberLabel = new JLabel(currentCursorItem.getText(), SwingConstants.CENTER);
 		numberLabel.setFont(new Font("Broadway", Font.BOLD, 45));
+		numberLabel.setForeground(CUSTOM_CELL_FG);
 		targetCell.add(numberLabel, BorderLayout.CENTER);
 		
 		targetCell.revalidate();
 		targetCell.repaint();
 		currentCursorItem = null;
 		cursorItem.setVisible(false);
+		
 	}
 	
+	private void eraseCell(JPanel cell) {
+	    // check if cell has temporary content (blue text)
+	    Component[] components = cell.getComponents();
+	    for (Component comp : components) {
+	        if (comp instanceof JLabel) {
+	            JLabel existingLabel = (JLabel) comp;
+	            if (existingLabel.getForeground().equals(CUSTOM_CELL_FG)) {
+	                cell.removeAll();
+	                cell.revalidate();
+	                cell.repaint();
+	                System.err.println("Erased temporary number from cell");
+	                return;
+	            }
+	        }
+	    }
+	    System.out.println("No temporary number to erase");
+	}
+	
+	
 	private void displayGame() {
-		// implementation for displaying the game
+		
+		for(int i = 0; i < CELL_COUNT; i++) {
+			for(int j = 0; j < CELL_COUNT; j++) {
+				if(sudokuBoard[i][j] != 0) {
+					JPanel targetCell = cellGrid[i][j];
+					targetCell.removeAll();
+					JLabel numberLabel = new JLabel(String.valueOf(sudokuBoard[i][j]), SwingConstants.CENTER);
+					numberLabel.setFont(new Font("Broadway", Font.BOLD, 45));
+					numberLabel.setForeground(PERM_CELL_FG);
+					targetCell.add(numberLabel, BorderLayout.CENTER);
+					targetCell.revalidate();
+					targetCell.repaint();
+				} 
+			}
+		}
+		
+	}
+	
+	public int[][] getCellGridAs2DArray(){
+	    
+	    int[][] result = new int[CELL_COUNT][CELL_COUNT];
+	    
+	    for(int i = 0; i < CELL_COUNT; i++) {
+	        for(int j = 0; j < CELL_COUNT; j++) {
+	            JPanel cell = cellGrid[i][j];
+	            int cellValue = 0;
+	            
+	            Component[] components = cell.getComponents();
+	            for (Component comp : components) {
+	                if (comp instanceof JLabel) {
+	                    JLabel label = (JLabel) comp;
+	                    String text = label.getText();
+	                    try {
+	                        cellValue = Integer.parseInt(text);
+	                    } catch (NumberFormatException e) {
+	                        cellValue = 0;
+	                    }
+	                    break; 
+	                }
+	            }
+	            
+	            result[i][j] = cellValue;
+	        }
+	    }
+	    
+	    return result;
 	}
 }
