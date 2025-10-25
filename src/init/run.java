@@ -2,11 +2,9 @@ package init;
 
 import view.StartUI;
 
-import java.util.Arrays;
 
 import model.SudokuBoard;
 import view.GameUI;
-import view.ResultUI;
 
 public class run {
 	
@@ -15,6 +13,9 @@ public class run {
 
 	public static void main(String[] args) 
 	{
+			// TODO Auto-generated method stub
+			
+		
 		
 		StartUI startUI = new StartUI();
 		SudokuBoard mainBoard = null;
@@ -39,10 +40,6 @@ public class run {
 			System.err.println("No difficulty picked!!!");
 			break;
 		}
-		
-		
-		GameUI gameUI = new GameUI(mainBoard);		
-
+		GameUI gameUI = new GameUI(mainBoard);			
 	}
-
 }

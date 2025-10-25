@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.swing.*;
 
+import init.run;
 import model.SudokuBoard;
 
 public class GameUI extends JPanel
@@ -95,8 +96,33 @@ public class GameUI extends JPanel
 			public void mousePressed(MouseEvent arg0) {
 				
 				finishedButtonPanel.setBackground(FINISHED_BUTTON_PRESSED);
-
+				
 				//Calculate answer
+				// IF BOARD IS FILLED MOVE TO THIS
+				
+				gameFrame.dispose();
+				ResultUI resultUI = new ResultUI();
+				
+				switch (resultUI.selection)
+				{
+				// Try again
+				case 0:
+				
+				break;
+				// change difficulty
+				case 1:
+				run Run = new run();
+				Run.main(null);
+				break;
+				
+				// Exit
+				case 2:
+				break;
+				
+				default:
+				System.err.println("Nothing was clicked so the game closed");
+				break;
+				}
 			}
 
 			public void mouseReleased(MouseEvent arg0) {
