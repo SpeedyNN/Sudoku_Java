@@ -438,7 +438,6 @@ public class GameUI extends JPanel
 				} 
 			}
 		}
-		
 	}
 	
 	public int[][] getCellGridAs2DArray(){
@@ -463,7 +462,6 @@ public class GameUI extends JPanel
 	                    break; 
 	                }
 	            }
-	            
 	            result[i][j] = cellValue;
 	        }
 	    }

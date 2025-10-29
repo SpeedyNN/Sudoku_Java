@@ -24,10 +24,11 @@ public class GameTimer {
 
     public void start() {
         timer.scheduleAtFixedRate(task, 0, 1000);
+        task.run();
     }
 
     public void stop() {
-        if (seconds > 0) {
+        if (seconds >= 0) {
         	timer.cancel();
 			System.out.println("Timer stopped at: " + seconds + "s");
         }
