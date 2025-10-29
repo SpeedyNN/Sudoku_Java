@@ -17,6 +17,7 @@ public class run {
 		
 		
 		StartUI startUI = new StartUI();
+		
 		SudokuBoard mainBoard = null;
 		
 		switch (startUI.selection){
@@ -40,9 +41,8 @@ public class run {
 			break;
 		}
 
-	    GameTimer timer = new GameTimer();
-	    timer.start();
-		
-		GameUI gameUI = new GameUI(mainBoard);			
+		GameUI gameUI = new GameUI(mainBoard);		
+		gameUI.timer = new GameTimer();
+		gameUI.timer.start();
 	}
 }

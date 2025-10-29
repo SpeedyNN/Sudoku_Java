@@ -58,6 +58,8 @@ public class GameUI extends JPanel
 	private JPanel[][] cellGrid = new JPanel[CELL_COUNT][CELL_COUNT];	
 	
 	private List<JLabel> numberLabels = new ArrayList<>();
+	public GameTimer timer;
+	
 
 	
 	public GameUI(SudokuBoard sudokuBoard){
@@ -66,6 +68,7 @@ public class GameUI extends JPanel
 		this.sudokuBoard = sudokuBoard.getGrid();
 		displayGame();
 	}
+	
 	
 	private void initializeUI(){
 		
@@ -101,10 +104,12 @@ public class GameUI extends JPanel
 				
 				//Calculate answer
 				// IF BOARD IS FILLED MOVE TO THIS
+			
 				
 				gameFrame.dispose();
-				ResultUI resultUI = new ResultUI();
 				
+				ResultUI resultUI = new ResultUI();
+				timer.stop();
 				switch (resultUI.selection)
 				{
 				// Try again
@@ -407,4 +412,6 @@ public class GameUI extends JPanel
 	    
 	    return result;
 	}
+
+	
 }
