@@ -11,12 +11,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.*;
 
 import init.run;
 import model.SudokuBoard;
+import model.GameTimer;
+import view.ResultUI;
 
 public class GameUI extends JPanel
 {
@@ -47,8 +50,13 @@ public class GameUI extends JPanel
 	private static final Color FINISHED_BUTTON_HOVER = new Color(201, 251, 192);
 	private static final Color FINISHED_BUTTON_PRESSED = new Color(159, 200, 152);
 
-	
-	private int[][] sudokuBoard;
+	private int[][] gridArray;
+	private String result;
+	private String finalResult;
+
+	private GameTimer timer;
+	private SudokuBoard sudokuBoard;
+	private static int [][] sudokuBoardGrid;
 
 	private JLabel currentCursorItem = null; 
 	private JPanel currentHoveredCell = null;
@@ -58,13 +66,69 @@ public class GameUI extends JPanel
 	private List<JLabel> numberLabels = new ArrayList<>();
 
 	
+	public SudokuBoard getCurrentSudokuBoard(){
+
+		return sudokuBoard;
+
+	}
+
+	public void calculateResult(){	
+	
+		gridArray = getCellGridAs2DArray();
+		
+		System.out.println("THIS IS THE GRIDARRAY:");
+		for(int i = 0; i < gridArray.length; i++){ 	// i = col
+			
+			for(int j = 0; j < gridArray[i].length; j++)	// j = row
+			{
+				System.out.print(gridArray[i][j]+ " ");
+			
+			}
+			System.out.println();
+		}
+
+		System.out.println("AND THIS IS THE SOLUTION:");
+		for(int i = 0; i < sudokuBoard.getSolution().length; i++){ 	// i = col
+			
+			for(int j = 0; j < sudokuBoard.getSolution()[i].length; j++)	// j = row
+			{
+				System.out.print(sudokuBoard.getSolution()[i][j]+ " ");
+			
+			}
+			System.out.println();
+		}
+		
+
+		if(Arrays.deepEquals(gridArray, sudokuBoard.getSolution())){
+			System.out.println("==== THE BOARD HAS BEEN SOLVED ====");
+			finalResult = " Correct";
+		} else {
+			System.out.println("==== NOT THE CORRECT SOLUTION ====");
+			finalResult = " Incorrect";
+			}
+		}
+		public String getFinalResult(){
+			return finalResult;
+		
+
+	}
+
 	public GameUI(SudokuBoard sudokuBoard){
-		initializeUI();
-		System.out.println(cellGrid);
-		this.sudokuBoard = sudokuBoard.getGrid();
-		displayGame();
+		this.sudokuBoard = sudokuBoard;
+		startGameUI(sudokuBoard);
 	}
 	
+	public void startGameUI(SudokuBoard sudokuBoard) {
+		initializeUI();
+		System.out.println(cellGrid);
+		sudokuBoardGrid = sudokuBoard.getGrid();
+		displayGame();
+	}
+
+	public GameUI(GameTimer timer) {
+		this.timer = timer;
+	}	
+
 	private void initializeUI(){
 		
 		gameFrame = new JFrame("Sudoku");
@@ -97,31 +161,31 @@ public class GameUI extends JPanel
 				
 				finishedButtonPanel.setBackground(FINISHED_BUTTON_PRESSED);
 				
-				//Calculate answer
-				// IF BOARD IS FILLED MOVE TO THIS
+				calculateResult();
 				
 				gameFrame.dispose();
+				//timer.stop();
+				//Create new instance of the resultUI
 				ResultUI resultUI = new ResultUI();
-				
-				switch (resultUI.selection)
-				{
-				// Try again
-				case 0:
-				
-				break;
-				// change difficulty
-				case 1:
-				run Run = new run();
-				Run.main(null);
-				break;
-				
-				// Exit
-				case 2:
-				break;
-				
-				default:
-				System.err.println("Nothing was clicked so the game closed");
-				break;
+
+				switch (resultUI.selection) {
+	
+					// try again
+					case 0:
+					run.globalGameUi = new GameUI(run.getMainBoard());
+					break;
+					// change difficulty
+					case 1:
+					run.globalGameUi = null;
+					run.main(null);
+					break;
+					// exit
+					case 2:
+					System.exit(0);
+					break;
+					default:
+					break;
+
 				}
 			}
 
@@ -132,6 +196,7 @@ public class GameUI extends JPanel
 				//Calculate answer
 			}
 		});
+			
 		
 		finishedButtonPanel.add(finishedButtonLabel);
 		topPanel.add(finishedButtonPanel);
@@ -361,10 +426,10 @@ public class GameUI extends JPanel
 		
 		for(int i = 0; i < CELL_COUNT; i++) {
 			for(int j = 0; j < CELL_COUNT; j++) {
-				if(sudokuBoard[i][j] != 0) {
+				if(sudokuBoardGrid[i][j] != 0) {
 					JPanel targetCell = cellGrid[i][j];
 					targetCell.removeAll();
-					JLabel numberLabel = new JLabel(String.valueOf(sudokuBoard[i][j]), SwingConstants.CENTER);
+					JLabel numberLabel = new JLabel(String.valueOf(sudokuBoardGrid[i][j]), SwingConstants.CENTER);
 					numberLabel.setFont(new Font("Broadway", Font.BOLD, 45));
 					numberLabel.setForeground(PERM_CELL_FG);
 					targetCell.add(numberLabel, BorderLayout.CENTER);

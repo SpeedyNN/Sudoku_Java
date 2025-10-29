@@ -5,20 +5,17 @@ import view.StartUI;
 
 import model.SudokuBoard;
 import view.GameUI;
+import model.GameTimer;
 
 public class run {
 	
-			
+	public static GameUI globalGameUi;
+	private static SudokuBoard mainBoard = null;
 
 
 	public static void main(String[] args) 
-	{
-			// TODO Auto-generated method stub
-			
-		
-		
+	{		
 		StartUI startUI = new StartUI();
-		SudokuBoard mainBoard = null;
 		
 		switch (startUI.selection){
 			
@@ -40,6 +37,17 @@ public class run {
 			System.err.println("No difficulty picked!!!");
 			break;
 		}
-		GameUI gameUI = new GameUI(mainBoard);			
+		//GameTimer timer = new GameTimer();
+		//timer.start();
+	/*	globalGameUI ui = new GameUI(timer);
+		ui.show(); */
+
+		globalGameUi = new GameUI(mainBoard);			
+	}
+
+	public static SudokuBoard getMainBoard(){
+
+		return mainBoard;
+
 	}
 }

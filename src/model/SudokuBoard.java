@@ -30,6 +30,12 @@ public class SudokuBoard {
 		
 	}
 
+	public int[][] getSolution(){
+		return solution;
+	}
+	
+	
+	
 	public int[][] getGrid() {
 		return grid;
 	}
