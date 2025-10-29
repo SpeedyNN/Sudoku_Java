@@ -1,8 +1,7 @@
 package init;
 
 import view.StartUI;
-
-
+import model.GameTimer;
 import model.SudokuBoard;
 import view.GameUI;
 
@@ -40,6 +39,10 @@ public class run {
 			System.err.println("No difficulty picked!!!");
 			break;
 		}
+
+	    GameTimer timer = new GameTimer();
+	    timer.start();
+		
 		GameUI gameUI = new GameUI(mainBoard);			
 	}
 }
