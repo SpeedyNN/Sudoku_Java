@@ -10,7 +10,7 @@ public class ResultUI
 	public int selection =  JOptionPane.showOptionDialog(null, 
 	"You are done with the sudoku puzzle."+
 	"\nYour result:"+ run.globalGameUi.getFinalResult()
-	+"\nYour Time:"+ model.GameTimer.TimeElapsed+" seconds",
+	+"\nYour Time:"+ model.GameTimer.finalTime+" seconds",
 	"Java Sudoku",0,3,null,Choice, Choice[0]);;
 					
 }	

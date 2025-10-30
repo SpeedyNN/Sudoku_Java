@@ -5,32 +5,35 @@ import java.util.TimerTask;
 
 
 public class GameTimer {
-    public static int TimeElapsed = 0;
-    public int seconds = 0;
+    public static int TimeElapsed;
     private Timer timer;
     private TimerTask task;
+    public static int finalTime;
 
     public GameTimer() {
-        timer = new Timer();
+        
+        
         task = new TimerTask() {
         
             public void run() {
-                seconds++;
-                TimeElapsed = seconds;
-                System.out.println("timer: " + seconds + "s");
+                TimeElapsed++;
+                System.out.println("timer: " + TimeElapsed + "s");
+                
             }
         };
     }
 
     public void start() {
+        TimeElapsed = 0;
+        timer = new Timer();
         timer.scheduleAtFixedRate(task, 0, 1000);
-        task.run();
     }
 
     public void stop() {
-        if (seconds >= 0) {
+        if (TimeElapsed >= 0) {
+            finalTime = TimeElapsed;
         	timer.cancel();
-			System.out.println("Timer stopped at: " + seconds + "s");
+			System.out.println("Timer stopped at: " + TimeElapsed + "s");
         }
     }
 }

@@ -37,12 +37,11 @@ public class run {
 			System.err.println("No difficulty picked!!!");
 			break;
 		}
-		//GameTimer timer = new GameTimer();
-		//timer.start();
-	/*	globalGameUI ui = new GameUI(timer);
-		ui.show(); */
+		
 
-		globalGameUi = new GameUI(mainBoard);			
+		globalGameUi = new GameUI(mainBoard);	
+		globalGameUi.timer = new GameTimer();
+		globalGameUi.timer.start();
 	}
 
 	public static SudokuBoard getMainBoard(){

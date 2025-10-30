@@ -54,7 +54,7 @@ public class GameUI extends JPanel
 	private String result;
 	private String finalResult;
 
-	private GameTimer timer;
+	
 	private SudokuBoard sudokuBoard;
 	private static int [][] sudokuBoardGrid;
 
@@ -64,7 +64,7 @@ public class GameUI extends JPanel
 	private JPanel[][] cellGrid = new JPanel[CELL_COUNT][CELL_COUNT];	
 	
 	private List<JLabel> numberLabels = new ArrayList<>();
-
+	public GameTimer timer;
 	
 	public SudokuBoard getCurrentSudokuBoard(){
 
@@ -125,9 +125,7 @@ public class GameUI extends JPanel
 		displayGame();
 	}
 
-	public GameUI(GameTimer timer) {
-		this.timer = timer;
-	}	
+
 
 	private void initializeUI(){
 		
@@ -162,29 +160,31 @@ public class GameUI extends JPanel
 				finishedButtonPanel.setBackground(FINISHED_BUTTON_PRESSED);
 				
 				calculateResult();
-				
 				gameFrame.dispose();
-				//timer.stop();
-				//Create new instance of the resultUI
+				timer.stop();
+
 				ResultUI resultUI = new ResultUI();
 
 				switch (resultUI.selection) {
 	
 					// try again
 					case 0:
-					run.globalGameUi = new GameUI(run.getMainBoard());
-					break;
+						run.globalGameUi = new GameUI(run.getMainBoard());
+						run.globalGameUi.timer = new GameTimer();
+						run.globalGameUi.timer.start();
+						break;
 					// change difficulty
 					case 1:
-					run.globalGameUi = null;
-					run.main(null);
-					break;
+						run.globalGameUi = null;
+						run.main(null);
+						break;
 					// exit
 					case 2:
-					System.exit(0);
-					break;
+						System.exit(0);
+						break;
 					default:
-					break;
+						System.err.println("Nothing was selected so the program closed");
+						break;
 
 				}
 			}
@@ -193,7 +193,6 @@ public class GameUI extends JPanel
 				
 				finishedButtonPanel.setBackground(FINISHED_BUTTON_COLOR);
 
-				//Calculate answer
 			}
 		});
 			
